@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 关键优化：设置横屏优先的视口，禁止用户缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=1.0, user-scalable=no">
     <title>网络侦探 - 赛博朋克任务卡</title>
     <style>
         /* 全局样式 */
@@ -21,16 +21,15 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px; /* 减小移动端内边距 */
-            touch-action: manipulation; /* 优化移动端触摸行为 */
+            padding: 10px; /* 减少全局内边距适配手机 */
         }
 
         /* 电脑边框容器：控制整体尺寸和背景图 */
         .computer-frame {
             position: relative;
-            width: 100%; /* 移动端占满宽度 */
-            max-width: 1200px;
-            aspect-ratio: 16/9;
+            width: 98%; /* 适配手机横屏宽度 */
+            max-width: 100%; /* 取消最大宽度限制 */
+            aspect-ratio: 16/9; /* 保持屏幕比例适配横屏 */
             background-image: url("https://p11-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/d902ecbbf74045e49e76fb3ee1caf63b.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=2026012002502376243478C78B523B295F&rrcfp=8a172a1a&x-expires=1769453423&x-signature=4D7KDUHa1VxbjZ5x89axgZkVEQ4%3D");
             background-size: contain;
             background-repeat: no-repeat;
@@ -48,22 +47,20 @@
             width: 80.5%;
             height: 88%;
             background: #000;
-            overflow-y: auto; /* 仅垂直滚动 */
-            overflow-x: hidden; /* 禁止水平滚动 */
+            overflow: auto;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
-            -webkit-overflow-scrolling: touch; /* 移动端顺滑滚动 */
+            padding: 15px; /* 减少内边距 */
         }
 
         /* 赛博朋克核心卡片样式 */
         .detective-card {
             display: flex;
             width: 100%;
-            max-width: 850px;
+            max-width: 100%; /* 取消最大宽度限制 */
             height: 100%;
-            max-height: 500px;
+            max-height: 100%; /* 取消最大高度限制 */
             background: #0a0a14;
             border: 1px solid #ff00ff;
             border-radius: 8px;
@@ -79,6 +76,7 @@
             animation: cardLoad 1.5s ease-out forwards 0.5s;
         }
 
+        /* 卡片载入动画 */
         @keyframes cardLoad {
             to {
                 opacity: 1;
@@ -86,6 +84,7 @@
             }
         }
 
+        /* 卡片呼吸发光效果 */
         @keyframes cardPulse {
             0% {
                 box-shadow: 0 0 15px rgba(0, 255, 255, 0.4), 0 0 30px rgba(255, 0, 255, 0.3);
@@ -119,6 +118,7 @@
             pointer-events: none;
         }
 
+        /* 数字雨背景效果 */
         .detective-card::after {
             content: "";
             position: absolute;
@@ -137,23 +137,25 @@
             opacity: 0.3;
         }
 
+        /* 数字雨动画 */
         @keyframes digitalRain {
             0% { background-position: 0 0; }
             100% { background-position: 0 100px; }
         }
 
-        /* 左侧图片区域 */
+        /* 左侧图片区域 - 基础样式优化 */
         .card-img {
-            flex: 0 0 320px;
+            flex: 0 0 280px; /* 优化基础宽度适配横屏 */
             background: #111119;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px; /* 减少内边距 */
             border-right: 1px solid #00ffff;
             transition: background 0.3s ease;
         }
 
+        /* 图片区hover变色 */
         .card-img:hover {
             background: #1a1a2e;
         }
@@ -161,6 +163,8 @@
         .detective-silhouette {
             width: 100%;
             height: auto;
+            max-height: 90%; /* 限制图片最大高度，防止溢出 */
+            object-fit: contain; /* 保持图片比例 */
             filter:
                 contrast(1.2)
                 drop-shadow(0 0 12px #9d00ff)
@@ -169,6 +173,7 @@
             transition: transform 0.3s ease;
         }
 
+        /* 图片hover放大 */
         .detective-silhouette:hover {
             transform: scale(1.05);
             filter:
@@ -188,7 +193,7 @@
         /* 右侧文本内容区域 */
         .card-content {
             flex: 1;
-            padding: 35px;
+            padding: 25px; /* 优化内边距 */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -197,11 +202,11 @@
         }
 
         .card-title {
-            font-size: 28px;
+            font-size: 26px; /* 优化基础标题大小 */
             color: #00ffff;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* 减少间距 */
             border-bottom: 1px solid #ff00ff;
-            padding-bottom: 10px;
+            padding-bottom: 8px; /* 减少间距 */
             text-shadow:
                 0 0 5px #00ffff,
                 0 0 10px #00ffff,
@@ -217,16 +222,19 @@
                 blinkCursor 0.7s infinite;
         }
 
+        /* 打字机动画 */
         @keyframes typing {
             from { width: 0; }
             to { width: 100%; }
         }
 
+        /* 光标闪烁动画 */
         @keyframes blinkCursor {
             from { border-right-color: #00ffff; }
             to { border-right-color: transparent; }
         }
 
+        /* 文字故障效果 */
         @keyframes glitch-text {
             0%, 100% { transform: translate(0); }
             5% { transform: translate(-2px, 2px); }
@@ -255,19 +263,20 @@
             z-index: -1;
         }
 
-        /* 正文字号 */
+        /* 正文字体优化 */
         .card-text {
-            font-size: 19px;
-            line-height: 1.8;
+            font-size: 17px; /* 优化基础正文字号 */
+            line-height: 1.7; /* 优化行高 */
             color: #ffffff;
             margin-top: 8px;
-            margin-bottom: 18px;
+            margin-bottom: 15px; /* 减少间距 */
             position: relative;
             opacity: 0;
             transform: translateX(20px);
             animation: textFadeIn 0.8s ease-out forwards;
         }
 
+        /* 文本逐行动画 */
         .card-text:nth-child(2) {
             animation-delay: 2s;
         }
@@ -287,6 +296,7 @@
             animation: highlightPulse 2s ease-in-out infinite alternate;
         }
 
+        /* 重点文字闪烁 */
         @keyframes highlightPulse {
             0% { text-shadow: 0 0 6px #00ffff; }
             100% { text-shadow: 0 0 12px #00ffff, 0 0 20px #ff00ff; }
@@ -302,6 +312,7 @@
             z-index: -1;
         }
 
+        /* 强调文本的下划线样式 */
         .emphasis-line {
             display: inline-block;
             position: relative;
@@ -322,13 +333,13 @@
 
         /* 开始调查按钮样式 */
         .investigate-btn {
-            margin-top: 30px;
-            padding: 12px 35px;
+            margin-top: 20px; /* 减少间距 */
+            padding: 10px 30px; /* 优化按钮内边距 */
             background: linear-gradient(45deg, #001133, #002266);
             border: 1px solid #00ffff;
             border-radius: 4px;
             color: #00ffff;
-            font-size: 18px;
+            font-size: 16px; /* 优化按钮字号 */
             font-weight: bold;
             text-align: center;
             text-shadow: 0 0 8px #00ffff;
@@ -339,9 +350,9 @@
             opacity: 0;
             transform: translateY(15px);
             animation: btnFadeIn 0.8s ease-out forwards 2.8s;
-            -webkit-tap-highlight-color: transparent; /* 移除移动端点击高亮 */
         }
 
+        /* 按钮载入动画 */
         @keyframes btnFadeIn {
             to {
                 opacity: 1;
@@ -349,7 +360,8 @@
             }
         }
 
-        .investigate-btn:hover, .investigate-btn:active { /* 增加active状态适配触摸 */
+        /* 按钮hover效果 */
+        .investigate-btn:hover {
             background: linear-gradient(45deg, #002266, #003399);
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.6), 0 0 25px rgba(255, 0, 255, 0.4);
             border-color: #ff00ff;
@@ -357,6 +369,7 @@
             transform: translateY(-2px);
         }
 
+        /* 按钮点击波纹效果 */
         .investigate-btn::after {
             content: "";
             position: absolute;
@@ -376,126 +389,75 @@
             opacity: 0;
         }
 
-        /* ---------- 移动端适配优化 (768px以下) ---------- */
-        @media (max-width: 768px) {
-            /* 调整body布局，适配小屏幕 */
-            body {
-                padding: 5px;
-                min-height: 100vh;
-                align-items: flex-start; /* 避免内容被截断 */
-                padding-top: 20px;
-                padding-bottom: 20px;
-            }
-
-            /* 电脑边框容器适配 */
+        /* ========== 关键：手机横屏专用适配 ========== */
+        @media screen and (orientation: landscape) and (max-width: 992px) {
+            /* 横屏时整体容器优化 */
             .computer-frame {
-                aspect-ratio: unset; /* 取消固定比例 */
-                min-height: 80vh; /* 保证最小高度 */
-                height: auto;
-                padding: 10px 0;
+                width: 99%;
+                aspect-ratio: 16/9;
             }
-
-            /* 屏幕内容区域精准适配 */
+            
+            /* 屏幕内容区域微调 */
             .screen-content {
-                top: 4%;
-                left: 6%;
-                width: 88%;
-                height: 92%;
+                top: 6%;
+                left: 5%;
+                width: 90%;
+                height: 86%;
                 padding: 10px;
             }
 
-            /* 卡片改为垂直布局 */
-            .detective-card {
-                flex-direction: column;
-                max-height: none;
-                height: 100%;
-                min-height: 600px; /* 保证卡片最小高度 */
-            }
-
-            /* 图片区域适配 */
+            /* 左侧图片区域 - 横屏优化 */
             .card-img {
-                flex: none;
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #00ffff;
-                padding: 15px;
-                min-height: 200px; /* 保证图片区域高度 */
+                flex: 0 0 220px; /* 横屏时缩小图片容器宽度 */
+                padding: 10px;
             }
 
-            /* 文本内容区域适配 */
+            .detective-silhouette {
+                max-height: 85%; /* 进一步限制图片高度 */
+            }
+
+            /* 右侧文本区域 - 横屏字体优化 */
             .card-content {
-                padding: 20px 15px;
-                flex: 1;
-                justify-content: space-around; /* 均匀分布内容 */
+                padding: 15px 20px;
             }
 
-            /* 标题适配 */
             .card-title {
-                font-size: 22px;
-                margin-bottom: 15px;
-                padding-bottom: 8px;
-                /* 调整打字机动画适配小屏幕 */
-                animation:
-                    glitch-text 2s infinite,
-                    typing 2s steps(8, end) forwards 1s,
-                    blinkCursor 0.7s infinite;
+                font-size: 22px; /* 横屏标题字号 */
+                margin-bottom: 10px;
+                padding-bottom: 5px;
             }
 
-            /* 正文适配 */
             .card-text {
-                font-size: 17px;
+                font-size: 15px; /* 横屏正文字号 */
                 line-height: 1.6;
-                margin-top: 8px;
-                margin-bottom: 15px;
+                margin-bottom: 10px;
             }
 
-            /* 按钮适配 */
+            /* 按钮优化 */
             .investigate-btn {
-                padding: 12px 30px;
-                font-size: 17px;
-                margin-top: 20px;
-                width: 100%; /* 按钮占满宽度 */
-                max-width: 300px; /* 限制最大宽度 */
-                align-self: center; /* 居中显示 */
-            }
-
-            /* 优化动画性能 */
-            .detective-card::after {
-                background-size: 30px 80px; /* 缩小数字雨图案 */
-                animation-duration: 20s; /* 减慢动画速度 */
-            }
-
-            /* 调整故障动画幅度 */
-            @keyframes glitch-img {
-                0%, 100% { transform: translate(0); }
-                20% { transform: translate(-0.5px, 0.5px); }
-                40% { transform: translate(0.5px, -0.5px); }
-                60% { transform: translate(-0.5px, -0.5px); }
-                80% { transform: translate(0.5px, 0.5px); }
+                padding: 8px 25px;
+                font-size: 15px;
+                margin-top: 15px;
             }
         }
 
-        /* 小屏手机额外适配 (480px以下) */
-        @media (max-width: 480px) {
-            .computer-frame {
-                min-height: 90vh;
+        /* 兜底：小尺寸横屏（如小屏手机）额外适配 */
+        @media screen and (orientation: landscape) and (max-width: 768px) {
+            .card-img {
+                flex: 0 0 180px; /* 更小的图片容器 */
             }
-            
-            .detective-card {
-                min-height: 550px;
-            }
-            
+
             .card-title {
                 font-size: 20px;
             }
-            
+
             .card-text {
-                font-size: 16px;
+                font-size: 14px;
             }
-            
+
             .investigate-btn {
-                padding: 10px 25px;
-                font-size: 16px;
+                padding: 7px 20px;
+                font-size: 14px;
             }
         }
     </style>
