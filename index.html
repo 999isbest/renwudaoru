@@ -149,14 +149,14 @@
             100% { background-position: 0 100px; }
         }
 
-        /* 左侧图片区域 */
+        /* 左侧图片区域 - 核心调整：优化容器尺寸和图片适配 */
         .card-img {
-            flex: 0 0 320px;
+            flex: 0 0 280px; /* 从320px调整为280px，更紧凑 */
             background: #111119;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px; /* 减少内边距，让图片显示更充分 */
             border-right: 1px solid #00ffff;
             transition: background 0.3s ease;
         }
@@ -166,8 +166,10 @@
         }
 
         .detective-silhouette {
-            width: 100%;
+            width: 90%; /* 从100%调整为90%，留出呼吸空间 */
+            max-height: 90%; /* 新增：限制最大高度，防止溢出 */
             height: auto;
+            object-fit: contain; /* 新增：保持图片比例，不拉伸 */
             /* 微调滤镜适配新图片色调 */
             filter:
                 contrast(1.15)
@@ -415,10 +417,14 @@
                 height: 100%;
             }
             .card-img {
-                flex: 0 0 220px;
+                flex: 0 0 200px; /* 移动端从220px调整为200px，更适配 */
                 border-right: 1px solid #00ffff !important;
                 border-bottom: none !important;
                 padding: 10px;
+            }
+            .detective-silhouette {
+                width: 90%; /* 移动端保持一致的适配比例 */
+                max-height: 90%;
             }
             .card-content {
                 padding: 20px;
@@ -452,8 +458,8 @@
         <div class="screen-content">
             <div class="detective-card">
                 <div class="card-img">
-                    <!-- 替换为新的侦探图片链接 -->
-                    <img src="https://i.imgs.ovh/2026/02/07/ydMklg.png">
+                    <!-- 替换为新的侦探图片链接，添加class属性 -->
+                    <img src="https://i.imgs.ovh/2026/02/07/ydMklg.png" class="detective-silhouette">
                 </div>
                 <div class="card-content">
                     <h2 class="card-title" data-text="任务载入中…">任务载入中…</h2>
@@ -468,4 +474,3 @@
     </div>
 </body>
 </html>
-
