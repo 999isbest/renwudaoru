@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <!-- 核心修复：视口适配，添加viewport-fit=cover兼容刘海屏 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>网络侦探 - 任务载入中</title>
     <style>
@@ -25,6 +24,9 @@
             /* 防止动画闪烁 */
             backface-visibility: hidden;
             transform: translateZ(0);
+            /* 初始状态不旋转 */
+            transform-origin: center center;
+            transition: transform 0.3s ease;
         }
 
         /* 电脑边框容器：控制整体尺寸和背景图 */
@@ -381,22 +383,18 @@
             opacity: 0;
         }
 
-        /* ========== 核心修复：移动端顺时针旋转90度 ========== */
+        /* 手机端适配（768px以下） */
         @media only screen and (max-width: 768px) {
             body {
-                /* 旋转核心：修正原点+适配视口，移除absolute避免溢出 */
-                transform-origin: center center;
-                transform: rotate(90deg);
+                transform: translate(-50%, -50%) rotate(90deg);
                 width: 100vh;
                 height: 100vw;
                 position: fixed;
                 top: 50%;
                 left: 50%;
-                transform: translate(-50%, -50%) rotate(90deg);
                 padding: 0;
                 margin: 0;
             }
-            /* 移动端容器适配 */
             .computer-frame {
                 width: 95%;
                 height: 90%;
@@ -417,13 +415,13 @@
                 height: 100%;
             }
             .card-img {
-                flex: 0 0 200px; /* 移动端从220px调整为200px，更适配 */
+                flex: 0 0 200px;
                 border-right: 1px solid #00ffff !important;
                 border-bottom: none !important;
                 padding: 10px;
             }
             .detective-silhouette {
-                width: 90%; /* 移动端保持一致的适配比例 */
+                width: 90%;
                 max-height: 90%;
             }
             .card-content {
@@ -446,9 +444,96 @@
                 font-size: 15px;
                 margin-top: 20px;
             }
-            /* 隐藏移动端点击高亮 */
             * {
                 -webkit-tap-highlight-color: transparent;
+            }
+        }
+
+        /* 平板设备适配（768px - 1024px） */
+        @media only screen and (min-width: 769px) and (max-width: 1024px) {
+            /* 平板横屏适配核心 */
+            body {
+                padding: 10px;
+                min-height: 100vw;
+                min-width: 100vh;
+            }
+            
+            .computer-frame {
+                width: 98%;
+                max-width: none;
+                aspect-ratio: 16/9;
+                height: auto;
+            }
+            
+            .screen-content {
+                top: 5%;
+                left: 9%;
+                width: 81%;
+                height: 89%;
+                padding: 15px;
+            }
+            
+            .detective-card {
+                max-width: none;
+                max-height: none;
+                height: 100%;
+                width: 100%;
+            }
+            
+            .card-img {
+                flex: 0 0 250px;
+                padding: 12px;
+            }
+            
+            .card-content {
+                padding: 25px;
+            }
+            
+            .card-title {
+                font-size: 26px;
+            }
+            
+            .card-text {
+                font-size: 18px;
+                line-height: 1.7;
+            }
+            
+            .investigate-btn {
+                padding: 11px 30px;
+                font-size: 17px;
+            }
+
+            /* 检测平板竖屏时自动旋转为横屏 */
+            @media (orientation: portrait) {
+                body {
+                    transform: rotate(90deg);
+                    transform-origin: center center;
+                    width: 100vh;
+                    height: 100vw;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    margin: -50vw 0 0 -50vh;
+                }
+            }
+        }
+
+        /* 大屏平板/小笔记本适配（1025px - 1200px） */
+        @media only screen and (min-width: 1025px) and (max-width: 1200px) {
+            .computer-frame {
+                width: 95%;
+            }
+            
+            .card-img {
+                flex: 0 0 260px;
+            }
+            
+            .card-title {
+                font-size: 27px;
+            }
+            
+            .card-text {
+                font-size: 18px;
             }
         }
     </style>
@@ -458,7 +543,6 @@
         <div class="screen-content">
             <div class="detective-card">
                 <div class="card-img">
-                    <!-- 替换为新的侦探图片链接，添加class属性 -->
                     <img src="https://i.imgs.ovh/2026/02/07/ydMklg.png" class="detective-silhouette">
                 </div>
                 <div class="card-content">
@@ -472,5 +556,47 @@
             </div>
         </div>
     </div>
+
+    <!-- 新增JS：检测设备方向并优化体验 -->
+    <script>
+        // 检测设备类型（平板/手机/桌面）
+        function detectDeviceType() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            const isTablet = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(userAgent);
+            const isMobile = /mobile|android|iphone|ipod|blackberry|iemobile|opera mini/.test(userAgent);
+            return { isTablet: isTablet && !isMobile, isMobile };
+        }
+
+        // 监听屏幕方向变化
+        window.addEventListener('orientationchange', function() {
+            const { isTablet } = detectDeviceType();
+            if (isTablet) {
+                // 平板方向变化后重新适配
+                document.body.style.transition = 'transform 0.3s ease';
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                }, 100);
+            }
+        });
+
+        // 页面加载完成后初始化适配
+        window.addEventListener('load', function() {
+            const { isTablet } = detectDeviceType();
+            if (isTablet) {
+                // 平板设备强制横屏显示
+                if (window.innerHeight > window.innerWidth) {
+                    document.body.style.transform = 'rotate(90deg)';
+                    document.body.style.transformOrigin = 'center center';
+                    document.body.style.width = `${window.innerHeight}px`;
+                    document.body.style.height = `${window.innerWidth}px`;
+                    document.body.style.position = 'fixed';
+                    document.body.style.top = '50%';
+                    document.body.style.left = '50%';
+                    document.body.style.marginTop = `-${window.innerWidth / 2}px`;
+                    document.body.style.marginLeft = `-${window.innerHeight / 2}px`;
+                }
+            }
+        });
+    </script>
 </body>
 </html>
